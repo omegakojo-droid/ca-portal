@@ -12,6 +12,478 @@
     --gold-light: #ffd07b;
     --cream: #fdf8f0;
     --slate: #4a5568;
+    --blue-soft: #e8f0fe;
+    --border: #e2e8f0;
+    --shadow: 0 4px 24px rgba(13,27,62,0.10);
+    --shadow-lg: 0 12px 48px rgba(13,27,62,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); min-height: 100vh; color: var(--navy); }
+
+  /* ── HEADER ── */
+  header { background: var(--navy); padding: 0 2rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.25); }
+  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 1rem; }
+  .logo { display: flex; align-items: center; gap: 0.75rem; }
+  .logo-badge { width: 40px; height: 40px; background: var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); flex-shrink: 0; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: #fff; line-height: 1.2; }
+  .logo-sub { font-size: 0.7rem; color: rgba(255,255,255,0.55); font-weight: 300; }
+  .semester-tag { background: rgba(245,166,35,0.18); border: 1px solid rgba(245,166,35,0.35); color: var(--gold-light); font-size: 0.72rem; font-weight: 500; padding: 0.3rem 0.75rem; border-radius: 20px; white-space: nowrap; }
+  .btn-logout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.78rem; padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer; transition: background 0.2s; display: none; }
+  .btn-logout:hover { background: rgba(255,255,255,0.2); }
+  .btn-logout.visible { display: block; }
+
+  /* ── LOGIN PAGE ── */
+  #login-page { min-height: calc(100vh - 68px); display: flex; align-items: center; justify-content: center; padding: 2rem; background: linear-gradient(135deg, var(--navy) 0%, #1a3a6e 100%); position: relative; overflow: hidden; }
+  #login-page::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 60%, rgba(245,166,35,0.15) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%); }
+  .login-card { background: #fff; border-radius: 28px; padding: 3rem 2.5rem; width: 100%; max-width: 440px; box-shadow: var(--shadow-lg); position: relative; animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .login-icon { width: 64px; height: 64px; background: linear-gradient(135deg, var(--navy), #1a3a6e); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 1.5rem; }
+  .login-card h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; text-align: center; margin-bottom: 0.4rem; color: var(--navy); }
+  .login-card .login-sub { text-align: center; color: var(--slate); font-size: 0.88rem; margin-bottom: 2rem; line-height: 1.5; }
+  .login-label { display: block; font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.7px; color: var(--slate); margin-bottom: 0.45rem; }
+  .login-input { width: 100%; border: 2px solid var(--border); border-radius: 12px; padding: 0.9rem 1.1rem; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--navy); background: #f9fbff; transition: border-color 0.2s, box-shadow 0.2s; outline: none; margin-bottom: 1.1rem; }
+  .login-input::placeholder { color: #b0bec5; }
+  .login-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,166,35,0.15); background: #fff; }
+  .login-input.error { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
+  .pw-wrapper { position: relative; margin-bottom: 1.5rem; }
+  .pw-wrapper .login-input { margin-bottom: 0; padding-right: 3rem; }
+  .pw-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 1.1rem; padding: 0; line-height: 1; }
+  .login-error { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.85rem; color: #dc2626; margin-bottom: 1.25rem; display: none; text-align: center; }
+  .login-error.show { display: block; animation: shake 0.4s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+  .btn-login { width: 100%; padding: 1rem; border: none; border-radius: 14px; background: linear-gradient(135deg, var(--navy), #1a3a6e); color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+  .btn-login:hover { opacity: 0.9; }
+  .btn-login:active { transform: scale(0.98); }
+  .login-hint { margin-top: 1.25rem; background: #f8faff; border-radius: 10px; padding: 0.85rem 1rem; font-size: 0.78rem; color: var(--slate); text-align: center; line-height: 1.6; border: 1px solid var(--border); }
+  .login-hint strong { color: var(--navy); }
+
+  /* ── PORTAL PAGE ── */
+  #portal-page { display: none; }
+  .hero { background: linear-gradient(135deg, var(--navy) 0%, #1a3a6e 100%); padding: 2.5rem 2rem 3rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 50%, rgba(245,166,35,0.12) 0%, transparent 60%); }
+  .hero-content { position: relative; max-width: 600px; margin: 0 auto; }
+  .welcome-badge { display: inline-block; background: rgba(245,166,35,0.2); border: 1px solid rgba(245,166,35,0.4); color: var(--gold-light); font-size: 0.8rem; padding: 0.35rem 1rem; border-radius: 20px; margin-bottom: 0.75rem; font-weight: 500; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 0.5rem; }
+  .hero h1 span { color: var(--gold); }
+  .hero p { color: rgba(255,255,255,0.6); font-size: 0.9rem; font-weight: 300; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+  /* ── SCORES CARD ── */
+  .result-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); animation: slideUp 0.35s ease; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .result-header { background: linear-gradient(135deg, var(--navy) 0%, #1a3a6e 100%); padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.25rem; }
+  .result-avatar { width: 52px; height: 52px; background: var(--gold); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--navy); flex-shrink: 0; }
+  .result-meta h2 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; }
+  .result-meta p { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin-top: 0.2rem; }
+  .scores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0; border-bottom: 1px solid var(--border); }
+  .score-cell { padding: 1.4rem 1.5rem; border-right: 1px solid var(--border); }
+  .score-cell:last-child { border-right: none; }
+  .score-label { font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; color: var(--slate); margin-bottom: 0.4rem; }
+  .score-value { font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800; color: var(--navy); line-height: 1; }
+  .score-max { font-size: 0.8rem; color: #94a3b8; font-weight: 400; margin-top: 0.2rem; }
+  .score-cell.highlight .score-value { color: var(--gold); }
+  .score-cell.final-cell { background: #f8faff; }
+  .score-cell.final-cell .score-value { color: #1a56db; }
+  .bar-container { height: 5px; background: var(--border); border-radius: 3px; margin-top: 0.6rem; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--gold), #f97316); }
+  .bar-fill.final { background: linear-gradient(90deg, #3b82f6, #1a56db); }
+  .result-footer { padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+  .course-tag { font-size: 0.78rem; color: var(--slate); font-style: italic; }
+  .btn-complaint { background: linear-gradient(135deg, var(--gold), #f97316); color: var(--navy); border: none; border-radius: 10px; padding: 0.6rem 1.25rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .btn-complaint:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(245,166,35,0.4); }
+
+  /* ── MODAL ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(13,27,62,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(4px); }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 24px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.88) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .modal-head { background: linear-gradient(135deg, var(--navy), #1a3a6e); padding: 1.75rem 2rem; border-radius: 24px 24px 0 0; display: flex; align-items: center; justify-content: space-between; }
+  .modal-head h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; }
+  .modal-head p { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+  .modal-close { background: rgba(255,255,255,0.15); border: none; width: 36px; height: 36px; border-radius: 10px; color: #fff; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
+  .modal-body { padding: 1.75rem 2rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-group label { display: block; font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.6px; color: var(--slate); margin-bottom: 0.45rem; }
+  .form-control { width: 100%; border: 2px solid var(--border); border-radius: 12px; padding: 0.8rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--navy); background: #f9fbff; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+  .form-control:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,166,35,0.12); background: #fff; }
+  textarea.form-control { resize: vertical; min-height: 110px; line-height: 1.5; }
+  select.form-control { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234a5568' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; }
+  .score-preview { background: var(--blue-soft); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .score-preview-item { font-size: 0.82rem; }
+  .score-preview-item span { font-weight: 600; color: var(--navy); }
+  .score-preview-label { color: var(--slate); }
+  .modal-footer { padding: 0 2rem 1.75rem; display: flex; gap: 0.75rem; }
+  .btn-cancel { flex: 1; padding: 0.85rem; border: 2px solid var(--border); border-radius: 12px; background: #fff; font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.88rem; cursor: pointer; color: var(--slate); }
+  .btn-submit { flex: 2; padding: 0.85rem; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--navy), #1a3a6e); color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+  .btn-submit:hover { opacity: 0.9; }
+  .success-screen { padding: 3rem 2rem; text-align: center; }
+  .success-icon { width: 64px; height: 64px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1.25rem; }
+  .success-screen h3 { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .success-screen p { color: var(--slate); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .ticket-id { background: #f1f5f9; border-radius: 10px; padding: 0.65rem 1rem; font-family: monospace; font-size: 0.9rem; color: var(--navy); display: inline-block; margin-bottom: 1.5rem; letter-spacing: 1px; }
+
+  /* ── COMPLAINTS ── */
+  #complaints-section { margin-top: 2rem; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.6rem; }
+  .count-badge { background: var(--navy); color: #fff; font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 20px; font-family: 'DM Sans', sans-serif; }
+  .complaints-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .complaint-item { background: #fff; border-radius: 14px; padding: 1.25rem 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); border-left: 4px solid var(--gold); animation: slideUp 0.3s ease; }
+  .complaint-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.6rem; }
+  .complaint-index { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; }
+  .complaint-date { font-size: 0.75rem; color: #94a3b8; flex-shrink: 0; }
+  .complaint-type { display: inline-block; background: var(--blue-soft); color: #1a56db; font-size: 0.73rem; font-weight: 600; padding: 0.22rem 0.65rem; border-radius: 6px; margin-bottom: 0.5rem; text-transform: uppercase; }
+  .complaint-text { font-size: 0.88rem; color: var(--slate); line-height: 1.6; }
+
+  footer { background: var(--navy); padding: 1.5rem 2rem; text-align: center; font-size: 0.78rem; color: rgba(255,255,255,0.35); margin-top: 4rem; }
+
+  @media (max-width: 600px) {
+    .login-card { padding: 2rem 1.5rem; }
+    .scores-grid { grid-template-columns: 1fr 1fr; }
+    .score-cell { border-right: none; border-bottom: 1px solid var(--border); }
+    .result-footer { flex-direction: column; }
+    .modal-footer { flex-direction: column-reverse; }
+    .semester-tag { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-badge">UCC</div>
+      <div>
+        <div class="logo-text">University of Cape Coast</div>
+        <div class="logo-sub">Student Assessment Portal</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <div class="semester-tag">2025/2026 · First Semester</div>
+      <button class="btn-logout" id="logoutBtn" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+</header>
+
+<!-- LOGIN PAGE -->
+<div id="login-page">
+  <div class="login-card">
+    <div class="login-icon">🎓</div>
+    <h2>Student Login</h2>
+    <p class="login-sub">Sign in to view your Continuous Assessment scores for ASP122A</p>
+
+    <label class="login-label" for="loginIndex">Index Number</label>
+    <input type="text" id="loginIndex" class="login-input" placeholder="e.g. SN/NSU/25/0001" autocomplete="off" spellcheck="false">
+
+    <label class="login-label" for="loginPassword">Password</label>
+    <div class="pw-wrapper">
+      <input type="password" id="loginPassword" class="login-input" placeholder="e.g. SN0001" autocomplete="off" spellcheck="false">
+      <button class="pw-toggle" onclick="togglePw()" id="pwToggle" title="Show/hide password">👁</button>
+    </div>
+
+    <div class="login-error" id="loginError">Incorrect index number or password. Please try again.</div>
+
+    <button class="btn-login" onclick="doLogin()">Sign In</button>
+
+    <div class="login-hint">
+      <strong>Password format:</strong> First 2 letters of your index + last 4 digits<br>
+      Example: Index <strong>SN/NSU/25/0001</strong> → Password <strong>SN0001</strong>
+    </div>
+  </div>
+</div>
+
+<!-- PORTAL PAGE -->
+<div id="portal-page">
+  <section class="hero">
+    <div class="hero-content">
+      <div class="welcome-badge" id="welcomeBadge">Welcome</div>
+      <h1>Your <span>CA Scores</span></h1>
+      <p>ASP122A: Comparative Analysis of Economic Development in Africa and the Caribbean</p>
+    </div>
+  </section>
+
+  <main>
+    <div id="result"></div>
+    <div id="complaints-section" style="display:none;">
+      <div class="section-title">Submitted Complaints <span class="count-badge" id="complaintCount">0</span></div>
+      <div class="complaints-list" id="complaintsList"></div>
+    </div>
+  </main>
+
+  <footer>University of Cape Coast &nbsp;·&nbsp; Department of Arts &amp; Social Sciences &nbsp;·&nbsp; 2025/2026</footer>
+</div>
+
+<!-- COMPLAINT MODAL -->
+<div class="modal-overlay" id="complaintModal">
+  <div class="modal"><div id="modalContent"></div></div>
+</div>
+
+<script>
+const DATA = {"SN-NSU (BSC Nursing)": {"group": "GROUP 1: BSC NURSING", "students": [{"index": "SN/NSU/25/0001", "cat": 5.0, "quiz1": 19.0, "quiz2": 18.0, "total": 42.0, "final": 30.55}, {"index": "SN/NSU/25/0002", "cat": 2.0, "quiz1": 7.0, "quiz2": 5.0, "total": 14.0, "final": 10.18}, {"index": "SN/NSU/25/0003", "cat": 5.0, "quiz1": 8.5, "quiz2": 8.0, "total": 21.5, "final": 15.64}, {"index": "SN/NSU/25/0004", "cat": 3.0, "quiz1": 19.0, "quiz2": 10.0, "total": 32.0, "final": 23.27}, {"index": "SN/NSU/25/0005", "cat": 5.0, "quiz1": 6.5, "quiz2": 12.5, "total": 24.0, "final": 17.45}, {"index": "SN/NSU/25/0006", "cat": 2.5, "quiz1": 17.0, "quiz2": 6.5, "total": 26.0, "final": 18.91}, {"index": "SN/NSU/25/0007", "cat": 5.0, "quiz1": 15.5, "quiz2": 11.0, "total": 31.5, "final": 22.91}, {"index": "SN/NSU/25/0008", "cat": 5.0, "quiz1": 16.0, "quiz2": 11.5, "total": 32.5, "final": 23.64}, {"index": "SN/NSU/25/0009", "cat": 3.5, "quiz1": 18.0, "quiz2": 7.5, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0010", "cat": 1.0, "quiz1": 18.5, "quiz2": 7.5, "total": 27.0, "final": 19.64}, {"index": "SN/NSU/25/0011", "cat": 1.5, "quiz1": 12.0, "quiz2": 7.0, "total": 20.5, "final": 14.91}, {"index": "SN/NSU/25/0012", "cat": 5.0, "quiz1": 16.0, "quiz2": 14.0, "total": 35.0, "final": 25.45}, {"index": "SN/NSU/25/0013", "cat": 2.0, "quiz1": 14.0, "quiz2": 8.5, "total": 24.5, "final": 17.82}, {"index": "SN/NSU/25/0014", "cat": 3.5, "quiz1": 18.5, "quiz2": 3.0, "total": 25.0, "final": 18.18}, {"index": "SN/NSU/25/0015", "cat": 2.5, "quiz1": 13.0, "quiz2": 8.0, "total": 23.5, "final": 17.09}, {"index": "SN/NSU/25/0016", "cat": 2.0, "quiz1": 12.0, "quiz2": 13.5, "total": 27.5, "final": 20.0}, {"index": "SN/NSU/25/0017", "cat": 1.5, "quiz1": 12.0, "quiz2": 7.0, "total": 20.5, "final": 14.91}, {"index": "SN/NSU/25/0018", "cat": 1.5, "quiz1": 13.0, "quiz2": 9.5, "total": 24.0, "final": 17.45}, {"index": "SN/NSU/25/0019", "cat": 1.0, "quiz1": 13.0, "quiz2": 5.5, "total": 19.5, "final": 14.18}, {"index": "SN/NSU/25/0020", "cat": 2.0, "quiz1": 16.5, "quiz2": 8.5, "total": 27.0, "final": 19.64}, {"index": "SN/NSU/25/0021", "cat": 2.5, "quiz1": 16.0, "quiz2": 3.0, "total": 21.5, "final": 15.64}, {"index": "SN/NSU/25/0022", "cat": 5.0, "quiz1": 14.0, "quiz2": 7.5, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0023", "cat": 3.0, "quiz1": 16.0, "quiz2": 4.0, "total": 23.0, "final": 16.73}, {"index": "SN/NSU/25/0024", "cat": 3.0, "quiz1": 8.0, "quiz2": 9.0, "total": 20.0, "final": 14.55}, {"index": "SN/NSU/25/0025", "cat": 2.5, "quiz1": 18.5, "quiz2": 9.0, "total": 30.0, "final": 21.82}, {"index": "SN/NSU/25/0026", "cat": 1.0, "quiz1": 16.0, "quiz2": 6.0, "total": 23.0, "final": 16.73}, {"index": "SN/NSU/25/0027", "cat": 4.0, "quiz1": 9.0, "quiz2": 6.0, "total": 19.0, "final": 13.82}, {"index": "SN/NSU/25/0028", "cat": 1.0, "quiz1": 17.0, "quiz2": 11.0, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0029", "cat": 4.0, "quiz1": 9.0, "quiz2": 6.0, "total": 19.0, "final": 13.82}, {"index": "SN/NSU/25/0030", "cat": 5.0, "quiz1": 17.0, "quiz2": 15.5, "total": 37.5, "final": 27.27}, {"index": "SN/NSU/25/0031", "cat": 3.0, "quiz1": 13.0, "quiz2": 10.5, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0032", "cat": 5.0, "quiz1": 17.5, "quiz2": 13.5, "total": 36.0, "final": 26.18}, {"index": "SN/NSU/25/0033", "cat": 4.0, "quiz1": 14.0, "quiz2": 5.0, "total": 23.0, "final": 16.73}, {"index": "SN/NSU/25/0034", "cat": 3.0, "quiz1": 9.0, "quiz2": 12.0, "total": 24.0, "final": 17.45}, {"index": "SN/NSU/25/0035", "cat": 3.0, "quiz1": 9.0, "quiz2": 6.0, "total": 18.0, "final": 13.09}, {"index": "SN/NSU/25/0036", "cat": 1.5, "quiz1": 17.5, "quiz2": 10.0, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0037", "cat": 4.0, "quiz1": 18.0, "quiz2": 9.0, "total": 31.0, "final": 22.55}, {"index": "SN/NSU/25/0038", "cat": 1.0, "quiz1": 12.0, "quiz2": 12.0, "total": 25.0, "final": 18.18}, {"index": "SN/NSU/25/0039", "cat": 4.0, "quiz1": 17.5, "quiz2": 10.5, "total": 32.0, "final": 23.27}, {"index": "SN/NSU/25/0040", "cat": 3.0, "quiz1": 9.0, "quiz2": 8.0, "total": 20.0, "final": 14.55}, {"index": "SN/NSU/25/0041", "cat": 3.0, "quiz1": 16.0, "quiz2": 10.0, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0042", "cat": 1.0, "quiz1": 18.0, "quiz2": 13.5, "total": 32.5, "final": 23.64}, {"index": "SN/NSU/25/0043", "cat": 5.0, "quiz1": 15.0, "quiz2": 8.5, "total": 28.5, "final": 20.73}, {"index": "SN/NSU/25/0044", "cat": 0.0, "quiz1": 17.0, "quiz2": 8.5, "total": 25.5, "final": 18.55}, {"index": "SN/NSU/25/0045", "cat": 2.5, "quiz1": 14.0, "quiz2": 8.0, "total": 24.5, "final": 17.82}, {"index": "SN/NSU/25/0046", "cat": 5.0, "quiz1": 15.5, "quiz2": 11.5, "total": 32.0, "final": 23.27}, {"index": "SN/NSU/25/0047", "cat": 4.0, "quiz1": 12.0, "quiz2": 7.5, "total": 23.5, "final": 17.09}, {"index": "SN/NSU/25/0048", "cat": 0, "quiz1": 19.5, "quiz2": 14.0, "total": 33.5, "final": 24.36}, {"index": "SN/NSU/25/0049", "cat": 1.0, "quiz1": 19.5, "quiz2": 10.0, "total": 30.5, "final": 22.18}, {"index": "SN/NSU/25/0050", "cat": 1.5, "quiz1": 10.0, "quiz2": 3.0, "total": 14.5, "final": 10.55}, {"index": "SN/NSU/25/0051", "cat": 4.0, "quiz1": 17.5, "quiz2": 9.5, "total": 31.0, "final": 22.55}, {"index": "SN/NSU/25/0052", "cat": 1.0, "quiz1": 16.0, "quiz2": 6.5, "total": 23.5, "final": 17.09}, {"index": "SN/NSU/25/0053", "cat": 4.0, "quiz1": 13.0, "quiz2": 11.0, "total": 28.0, "final": 20.36}, {"index": "SN/NSU/25/0054", "cat": 3.0, "quiz1": 12.5, "quiz2": 9.0, "total": 24.5, "final": 17.82}, {"index": "SN/NSU/25/0055", "cat": 3.0, "quiz1": 12.0, "quiz2": 4.0, "total": 19.0, "final": 13.82}, {"index": "SN/NSU/25/0056", "cat": 4.0, "quiz1": 14.0, "quiz2": 13.0, "total": 31.0, "final": 22.55}, {"index": "SN/NSU/25/0057", "cat": 4.0, "quiz1": 17.0, "quiz2": 6.0, "total": 27.0, "final": 19.64}, {"index": "SN/NSU/25/0058", "cat": 5.0, "quiz1": 17.0, "quiz2": 15.5, "total": 37.5, "final": 27.27}, {"index": "SN/NSU/25/0059", "cat": 1.0, "quiz1": 15.0, "quiz2": 11.0, "total": 27.0, "final": 19.64}, {"index": "SN/NSU/25/0060", "cat": 5.0, "quiz1": 14.5, "quiz2": 11.5, "total": 31.0, "final": 22.55}, {"index": "SN/NSU/25/0061", "cat": 2.5, "quiz1": 19.5, "quiz2": 13.0, "total": 35.0, "final": 25.45}, {"index": "SN/NSU/25/0062", "cat": 0, "quiz1": 0, "quiz2": 0, "total": 0.0, "final": 0.0}, {"index": "SN/NSU/25/0063", "cat": 2.0, "quiz1": 12.0, "quiz2": 13.5, "total": 27.5, "final": 20.0}, {"index": "SN/NSU/25/0064", "cat": 5.0, "quiz1": 19.0, "quiz2": 11.5, "total": 35.5, "final": 25.82}, {"index": "SN/NSU/25/0065", "cat": 1.0, "quiz1": 19.0, "quiz2": 10.0, "total": 30.0, "final": 21.82}, {"index": "SN/NSU/25/0066", "cat": 1.0, "quiz1": 12.0, "quiz2": 12.5, "total": 25.5, "final": 18.55}, {"index": "SN/NSU/25/0067", "cat": 2.0, "quiz1": 18.0, "quiz2": 13.0, "total": 33.0, "final": 24.0}, {"index": "SN/NSU/25/0068", "cat": 4.0, "quiz1": 10.0, "quiz2": 13.0, "total": 27.0, "final": 19.64}, {"index": "SN/NSU/25/0069", "cat": 1.5, "quiz1": 16.5, "quiz2": 6.0, "total": 24.0, "final": 17.45}, {"index": "SN/NSU/25/0070", "cat": 4.0, "quiz1": 5.5, "quiz2": 8.5, "total": 18.0, "final": 13.09}, {"index": "SN/NSU/25/0071", "cat": 1.5, "quiz1": 10.0, "quiz2": 10.0, "total": 21.5, "final": 15.64}, {"index": "SN/NSU/25/0072", "cat": 3.0, "quiz1": 11.0, "quiz2": 9.0, "total": 23.0, "final": 16.73}, {"index": "SN/NSU/25/0073", "cat": 1.5, "quiz1": 11.0, "quiz2": 13.0, "total": 25.5, "final": 18.55}, {"index": "SN/NSU/25/0074", "cat": 3.5, "quiz1": 18.0, "quiz2": 8.5, "total": 30.0, "final": 21.82}, {"index": "SN/NSU/25/0075", "cat": 1.5, "quiz1": 18.5, "quiz2": 12.5, "total": 32.5, "final": 23.64}, {"index": "SN/NSU/25/0076", "cat": 0, "quiz1": 19.5, "quiz2": 13.5, "total": 33.0, "final": 24.0}, {"index": "SN/NSU/25/0077", "cat": 3.0, "quiz1": 18.0, "quiz2": 5.5, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0078", "cat": 3.0, "quiz1": 9.0, "quiz2": 8.5, "total": 20.5, "final": 14.91}, {"index": "SN/NSU/25/0079", "cat": 2.5, "quiz1": 9.0, "quiz2": 7.0, "total": 18.5, "final": 13.45}, {"index": "SN/NSU/25/0080", "cat": 3.0, "quiz1": 13.0, "quiz2": 7.5, "total": 23.5, "final": 17.09}, {"index": "SN/NSU/25/0081", "cat": 1.5, "quiz1": 16.0, "quiz2": 6.0, "total": 23.5, "final": 17.09}, {"index": "SN/NSU/25/0082", "cat": 5.0, "quiz1": 9.0, "quiz2": 7.5, "total": 21.5, "final": 15.64}, {"index": "SN/NSU/25/0083", "cat": 2.5, "quiz1": 16.5, "quiz2": 7.0, "total": 26.0, "final": 18.91}, {"index": "SN/NSU/25/0084", "cat": 2.0, "quiz1": 16.0, "quiz2": 11.0, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0085", "cat": 2.0, "quiz1": 20.0, "quiz2": 5.0, "total": 27.0, "final": 19.64}, {"index": "SN/NSU/25/0086", "cat": 4.0, "quiz1": 19.0, "quiz2": 6.0, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0087", "cat": 1.0, "quiz1": 5.0, "quiz2": 8.5, "total": 14.5, "final": 10.55}, {"index": "SN/NSU/25/0088", "cat": 3.0, "quiz1": 16.0, "quiz2": 10.5, "total": 29.5, "final": 21.45}, {"index": "SN/NSU/25/0089", "cat": 1.5, "quiz1": 9.0, "quiz2": 7.5, "total": 18.0, "final": 13.09}, {"index": "SN/NSU/25/0090", "cat": 2.0, "quiz1": 15.5, "quiz2": 8.0, "total": 25.5, "final": 18.55}, {"index": "SN/NSU/25/0091", "cat": 4.0, "quiz1": 11.0, "quiz2": 6.0, "total": 21.0, "final": 15.27}, {"index": "SN/NSU/25/0092", "cat": 3.0, "quiz1": 15.5, "quiz2": 8.0, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0093", "cat": 3.0, "quiz1": 12.0, "quiz2": 11.5, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0094", "cat": 1.0, "quiz1": 16.0, "quiz2": 3.0, "total": 20.0, "final": 14.55}, {"index": "SN/NSU/25/0095", "cat": 2.5, "quiz1": 17.0, "quiz2": 11.0, "total": 30.5, "final": 22.18}, {"index": "SN/NSU/25/0096", "cat": 4.0, "quiz1": 15.0, "quiz2": 15.5, "total": 34.5, "final": 25.09}, {"index": "SN/NSU/25/0097", "cat": 2.0, "quiz1": 17.0, "quiz2": 6.0, "total": 25.0, "final": 18.18}, {"index": "SN/NSU/25/0098", "cat": 4.0, "quiz1": 15.5, "quiz2": 5.5, "total": 25.0, "final": 18.18}, {"index": "SN/NSU/25/0099", "cat": 5.0, "quiz1": 17.0, "quiz2": 7.5, "total": 29.5, "final": 21.45}, {"index": "SN/NSU/25/0100", "cat": 5.0, "quiz1": 15.0, "quiz2": 12.0, "total": 32.0, "final": 23.27}, {"index": "SN/NSU/25/0101", "cat": 1.0, "quiz1": 13.5, "quiz2": 8.5, "total": 23.0, "final": 16.73}, {"index": "SN/NSU/25/0102", "cat": 2.5, "quiz1": 17.5, "quiz2": 13.0, "total": 33.0, "final": 24.0}, {"index": "SN/NSU/25/0103", "cat": 5.0, "quiz1": 17.0, "quiz2": 10.5, "total": 32.5, "final": 23.64}, {"index": "SN/NSU/25/0104", "cat": 1.5, "quiz1": 19.0, "quiz2": 9.0, "total": 29.5, "final": 21.45}, {"index": "SN/NSU/25/0105", "cat": 1.0, "quiz1": 7.0, "quiz2": 11.0, "total": 19.0, "final": 13.82}, {"index": "SN/NSU/25/0106", "cat": 5.0, "quiz1": 13.0, "quiz2": 7.5, "total": 25.5, "final": 18.55}, {"index": "SN/NSU/25/0107", "cat": 3.5, "quiz1": 19.5, "quiz2": 7.5, "total": 30.5, "final": 22.18}, {"index": "SN/NSU/25/0108", "cat": 4.0, "quiz1": 17.0, "quiz2": 10.5, "total": 31.5, "final": 22.91}, {"index": "SN/NSU/25/0109", "cat": 2.5, "quiz1": 12.0, "quiz2": 4.0, "total": 18.5, "final": 13.45}, {"index": "SN/NSU/25/0110", "cat": 0, "quiz1": 19.5, "quiz2": 12.0, "total": 31.5, "final": 22.91}, {"index": "SN/NSU/25/0111", "cat": 5.0, "quiz1": 16.5, "quiz2": 13.0, "total": 34.5, "final": 25.09}, {"index": "SN/NSU/25/0112", "cat": 4.0, "quiz1": 17.0, "quiz2": 11.0, "total": 32.0, "final": 23.27}, {"index": "SN/NSU/25/0113", "cat": 4.0, "quiz1": 17.0, "quiz2": 8.0, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0114", "cat": 2.5, "quiz1": 14.0, "quiz2": 3.0, "total": 19.5, "final": 14.18}, {"index": "SN/NSU/25/0115", "cat": 2.0, "quiz1": 9.0, "quiz2": 10.0, "total": 21.0, "final": 15.27}, {"index": "SN/NSU/25/0116", "cat": 2.0, "quiz1": 13.0, "quiz2": 8.0, "total": 23.0, "final": 16.73}, {"index": "SN/NSU/25/0117", "cat": 3.0, "quiz1": 15.0, "quiz2": 8.5, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0118", "cat": 4.0, "quiz1": 15.0, "quiz2": 7.0, "total": 26.0, "final": 18.91}, {"index": "SN/NSU/25/0119", "cat": 5.0, "quiz1": 14.0, "quiz2": 8.5, "total": 27.5, "final": 20.0}, {"index": "SN/NSU/25/0120", "cat": 4.0, "quiz1": 15.0, "quiz2": 11.0, "total": 30.0, "final": 21.82}, {"index": "SN/NSU/25/0121", "cat": 5.0, "quiz1": 15.0, "quiz2": 9.0, "total": 29.0, "final": 21.09}, {"index": "SN/NSU/25/0122", "cat": 3.0, "quiz1": 13.0, "quiz2": 4.0, "total": 20.0, "final": 14.55}, {"index": "SN/NSU/25/0123", "cat": 2.5, "quiz1": 18.0, "quiz2": 14.5, "total": 35.0, "final": 25.45}, {"index": "SN/NSU/25/0124", "cat": 4.0, "quiz1": 16.0, "quiz2": 8.5, "total": 28.5, "final": 20.73}, {"index": "SN/NSU/25/0125", "cat": 2.0, "quiz1": 14.0, "quiz2": 12.0, "total": 28.0, "final": 20.36}, {"index": "SN/NSU/25/0126", "cat": 3.0, "quiz1": 15.0, "quiz2": 13.5, "total": 31.5, "final": 22.91}, {"index": "SN/NSU/25/0127", "cat": 5.0, "quiz1": 8.0, "quiz2": 4.0, "total": 17.0, "final": 12.36}, {"index": "SN/NSU/25/0128", "cat": 4.0, "quiz1": 14.0, "quiz2": 4.0, "total": 22.0, "final": 16.0}, {"index": "SN/NSU/25/0129", "cat": 2.0, "quiz1": 10.0, "quiz2": 5.0, "total": 17.0, "final": 12.36}, {"index": "SN/NSU/25/0130", "cat": 4.0, "quiz1": 16.5, "quiz2": 5.5, "total": 26.0, "final": 18.91}, {"index": "SN/NSU/25/0131", "cat": 3.0, "quiz1": 15.0, "quiz2": 11.5, "total": 29.5, "final": 21.45}, {"index": "SN/NSU/25/0132", "cat": 3.0, "quiz1": 16.5, "quiz2": 7.0, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0133", "cat": 5.0, "quiz1": 17.0, "quiz2": 16.0, "total": 38.0, "final": 27.64}, {"index": "SN/NSU/25/0134", "cat": 1.5, "quiz1": 19.5, "quiz2": 14.0, "total": 35.0, "final": 25.45}, {"index": "SN/NSU/25/0135", "cat": 0, "quiz1": 16.5, "quiz2": 6.0, "total": 22.5, "final": 16.36}, {"index": "SN/NSU/25/0136", "cat": 4.0, "quiz1": 17.0, "quiz2": 10.0, "total": 31.0, "final": 22.55}, {"index": "SN/NSU/25/0137", "cat": 1.0, "quiz1": 16.0, "quiz2": 8.5, "total": 25.5, "final": 18.55}, {"index": "SN/NSU/25/0138", "cat": 4.0, "quiz1": 14.0, "quiz2": 8.0, "total": 26.0, "final": 18.91}, {"index": "SN/NSU/25/0139", "cat": 3.0, "quiz1": 17.0, "quiz2": 6.5, "total": 26.5, "final": 19.27}, {"index": "SN/NSU/25/0140", "cat": 4.0, "quiz1": 16.5, "quiz2": 6.5, "total": 27.0, "final": 19.64}, {"index": "SN/NSU/25/0141", "cat": 3.0, "quiz1": 12.5, "quiz2": 3.0, "total": 18.5, "final": 13.45}]}, "AH-NRT (Nutrition)": {"group": "GROUP 2: BSC NUTRITION", "students": [{"index": "AH/NRT/25/0001", "cat": 0.0, "quiz1": 11.0, "quiz2": 8.5, "total": 19.5, "final": 14.18}, {"index": "AH/NRT/25/0002", "cat": 2.5, "quiz1": 18.5, "quiz2": 3.0, "total": 24.0, "final": 17.45}, {"index": "AH/NRT/25/0003", "cat": 2.5, "quiz1": 19.0, "quiz2": 3.0, "total": 24.5, "final": 17.82}, {"index": "AH/NRT/25/0004", "cat": 3.0, "quiz1": 17.5, "quiz2": 1.0, "total": 21.5, "final": 15.64}, {"index": "AH/NRT/25/0005", "cat": 5.0, "quiz1": 18.0, "quiz2": 6.0, "total": 29.0, "final": 21.09}, {"index": "AH/NRT/25/0006", "cat": 0.0, "quiz1": 13.0, "quiz2": 8.0, "total": 21.0, "final": 15.27}, {"index": "AH/NRT/25/0007", "cat": 0, "quiz1": 18.0, "quiz2": 4.0, "total": 22.0, "final": 16.0}, {"index": "AH/NRT/25/0008", "cat": 4.0, "quiz1": 16.0, "quiz2": 4.5, "total": 24.5, "final": 17.82}, {"index": "AH/NRT/25/0009", "cat": 5.0, "quiz1": 19.0, "quiz2": 5.0, "total": 29.0, "final": 21.09}, {"index": "AH/NRT/25/0010", "cat": 1.0, "quiz1": 16.0, "quiz2": 8.0, "total": 25.0, "final": 18.18}, {"index": "AH/NRT/25/0011", "cat": 2.5, "quiz1": 19.5, "quiz2": 3.5, "total": 25.5, "final": 18.55}, {"index": "AH/NRT/25/0012", "cat": 5.0, "quiz1": 17.5, "quiz2": 3.0, "total": 25.5, "final": 18.55}, {"index": "AH/NRT/25/0013", "cat": 1.0, "quiz1": 17.5, "quiz2": 5.0, "total": 23.5, "final": 17.09}, {"index": "AH/NRT/25/0014", "cat": 2.0, "quiz1": 12.0, "quiz2": 7.0, "total": 21.0, "final": 15.27}, {"index": "AH/NRT/25/0015", "cat": 4.0, "quiz1": 15.0, "quiz2": 6.5, "total": 25.5, "final": 18.55}, {"index": "AH/NRT/25/0016", "cat": 5.0, "quiz1": 17.5, "quiz2": 7.0, "total": 29.5, "final": 21.45}, {"index": "AH/NRT/25/0017", "cat": 5.0, "quiz1": 18.0, "quiz2": 12.0, "total": 35.0, "final": 25.45}, {"index": "AH/NRT/25/0018", "cat": 0, "quiz1": 0, "quiz2": 0, "total": 0.0, "final": 0.0}, {"index": "AH/NRT/25/0019", "cat": 5.0, "quiz1": 16.5, "quiz2": 4.5, "total": 26.0, "final": 18.91}, {"index": "AH/NRT/25/0020", "cat": 1.0, "quiz1": 16.0, "quiz2": 6.5, "total": 23.5, "final": 17.09}, {"index": "AH/NRT/25/0021", "cat": 1.0, "quiz1": 18.5, "quiz2": 5.0, "total": 24.5, "final": 17.82}, {"index": "AH/NRT/25/0022", "cat": 0.0, "quiz1": 11.0, "quiz2": 5.5, "total": 16.5, "final": 12.0}, {"index": "AH/NRT/25/0023", "cat": 5.0, "quiz1": 13.0, "quiz2": 3.5, "total": 21.5, "final": 15.64}, {"index": "AH/NRT/25/0024", "cat": 4.5, "quiz1": 16.0, "quiz2": 9.5, "total": 30.0, "final": 21.82}, {"index": "AH/NRT/25/0025", "cat": 2.0, "quiz1": 11.5, "quiz2": 6.0, "total": 19.5, "final": 14.18}, {"index": "AH/NRT/25/0026", "cat": 5.0, "quiz1": 17.5, "quiz2": 7.0, "total": 29.5, "final": 21.45}, {"index": "AH/NRT/25/0027", "cat": 5.0, "quiz1": 16.5, "quiz2": 8.0, "total": 29.5, "final": 21.45}, {"index": "AH/NRT/25/0028", "cat": 3.0, "quiz1": 18.0, "quiz2": 5.5, "total": 26.5, "final": 19.27}, {"index": "AH/NRT/25/0029", "cat": 2.5, "quiz1": 15.5, "quiz2": 7.5, "total": 25.5, "final": 18.55}, {"index": "AH/NRT/25/0030", "cat": 2.5, "quiz1": 16.5, "quiz2": 11.5, "total": 30.5, "final": 22.18}, {"index": "AH/NRT/25/0031", "cat": 3.0, "quiz1": 18.5, "quiz2": 5.5, "total": 27.0, "final": 19.64}, {"index": "AH/NRT/25/0032", "cat": 4.0, "quiz1": 13.0, "quiz2": 4.0, "total": 21.0, "final": 15.27}, {"index": "AH/NRT/25/0033", "cat": 2.5, "quiz1": 16.0, "quiz2": 4.0, "total": 22.5, "final": 16.36}, {"index": "AH/NRT/25/0034", "cat": 5.0, "quiz1": 0, "quiz2": 6.0, "total": 11.0, "final": 8.0}, {"index": "AH/NRT/25/0035", "cat": 0.0, "quiz1": 13.0, "quiz2": 5.5, "total": 18.5, "final": 13.45}, {"index": "AH/NRT/25/0036", "cat": 5.0, "quiz1": 19.0, "quiz2": 3.5, "total": 27.5, "final": 20.0}, {"index": "AH/NRT/25/0037", "cat": 1.5, "quiz1": 10.0, "quiz2": 3.5, "total": 15.0, "final": 10.91}, {"index": "AH/NRT/25/0038", "cat": 0.0, "quiz1": 0, "quiz2": 4.0, "total": 4.0, "final": 2.91}, {"index": "AH/NRT/25/0039", "cat": 4.0, "quiz1": 19.0, "quiz2": 7.0, "total": 30.0, "final": 21.82}, {"index": "AH/NRT/25/0040", "cat": 1.5, "quiz1": 19.5, "quiz2": 4.5, "total": 25.5, "final": 18.55}, {"index": "AH/NRT/25/0041", "cat": 2.5, "quiz1": 14.0, "quiz2": 3.0, "total": 19.5, "final": 14.18}, {"index": "AH/NRT/25/0042", "cat": 4.0, "quiz1": 17.0, "quiz2": 2.5, "total": 23.5, "final": 17.09}]}};
+
+// Build lookup index
+const lookup = {};
+Object.entries(DATA).forEach(([gn, gd]) => {
+  gd.students.forEach(s => { lookup[s.index.toUpperCase()] = {...s, groupName: gn, group: gd.group}; });
+});
+
+// Derive password from index: first 2 letters + last 4 digits
+function getPassword(index) {
+  const parts = index.split('/');
+  const firstTwo = parts[0].substring(0, 2).toUpperCase();
+  const lastFour = parts[parts.length - 1].slice(-4);
+  return firstTwo + lastFour;
+}
+
+let currentStudent = null;
+const complaints = [];
+
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+document.getElementById('loginIndex').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginPassword').focus(); });
+document.getElementById('loginPassword').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function togglePw() {
+  const inp = document.getElementById('loginPassword');
+  const btn = document.getElementById('pwToggle');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+function doLogin() {
+  const indexRaw = document.getElementById('loginIndex').value.trim();
+  const pwRaw = document.getElementById('loginPassword').value.trim();
+  const indexKey = indexRaw.toUpperCase().replace(/\s+/g, '');
+  const pwEntered = pwRaw.toUpperCase();
+
+  const errEl = document.getElementById('loginError');
+  errEl.classList.remove('show');
+  document.getElementById('loginIndex').classList.remove('error');
+  document.getElementById('loginPassword').classList.remove('error');
+
+  const student = lookup[indexKey];
+  if (!student) {
+    showLoginError(); return;
+  }
+
+  const correctPw = getPassword(student.index);
+  if (pwEntered !== correctPw) {
+    showLoginError(); return;
+  }
+
+  // Success
+  currentStudent = student;
+  showPortal(student);
+}
+
+function showLoginError() {
+  const errEl = document.getElementById('loginError');
+  document.getElementById('loginIndex').classList.add('error');
+  document.getElementById('loginPassword').classList.add('error');
+  errEl.classList.add('show');
+  setTimeout(() => {
+    document.getElementById('loginIndex').classList.remove('error');
+    document.getElementById('loginPassword').classList.remove('error');
+  }, 2000);
+}
+
+function showPortal(s) {
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('portal-page').style.display = 'block';
+  document.getElementById('logoutBtn').classList.add('visible');
+
+  const initials = s.index.split('/').slice(0,2).join('').substring(0,2).toUpperCase();
+  document.getElementById('welcomeBadge').textContent = 'Welcome, ' + s.index;
+
+  document.getElementById('result').innerHTML = `
+  <div class="result-card">
+    <div class="result-header">
+      <div class="result-avatar">${initials}</div>
+      <div class="result-meta"><h2>${s.index}</h2><p>${s.group}</p></div>
+    </div>
+    <div class="scores-grid">
+      <div class="score-cell">
+        <div class="score-label">CAT (CA 1)</div>
+        <div class="score-value">${s.cat}</div>
+        <div class="score-max">out of 5</div>
+        <div class="bar-container"><div class="bar-fill" style="width:${(s.cat/5)*100}%"></div></div>
+      </div>
+      <div class="score-cell">
+        <div class="score-label">Quiz 1 (CA 2)</div>
+        <div class="score-value">${s.quiz1}</div>
+        <div class="score-max">out of 20</div>
+        <div class="bar-container"><div class="bar-fill" style="width:${(s.quiz1/20)*100}%"></div></div>
+      </div>
+      <div class="score-cell">
+        <div class="score-label">Quiz 2 (CA 3)</div>
+        <div class="score-value">${s.quiz2}</div>
+        <div class="score-max">out of 30</div>
+        <div class="bar-container"><div class="bar-fill" style="width:${(s.quiz2/30)*100}%"></div></div>
+      </div>
+      <div class="score-cell highlight">
+        <div class="score-label">Total Raw</div>
+        <div class="score-value">${s.total}</div>
+        <div class="score-max">out of 55</div>
+        <div class="bar-container"><div class="bar-fill" style="width:${(s.total/55)*100}%"></div></div>
+      </div>
+      <div class="score-cell final-cell">
+        <div class="score-label">CA Score (40%)</div>
+        <div class="score-value">${s.final}</div>
+        <div class="score-max">out of 40</div>
+        <div class="bar-container"><div class="bar-fill final" style="width:${(s.final/40)*100}%"></div></div>
+      </div>
+    </div>
+    <div class="result-footer">
+      <div class="course-tag">ASP122A &nbsp;·&nbsp; ${s.group}</div>
+      <button class="btn-complaint" onclick="openComplaint()">⚑ Lodge a Complaint</button>
+    </div>
+  </div>`;
+}
+
+function logout() {
+  currentStudent = null;
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('portal-page').style.display = 'none';
+  document.getElementById('logoutBtn').classList.remove('visible');
+  document.getElementById('loginIndex').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('loginError').classList.remove('show');
+  document.getElementById('result').innerHTML = '';
+  document.getElementById('complaints-section').style.display = 'none';
+}
+
+// ── COMPLAINTS ───────────────────────────────────────────────────────────────
+function openComplaint() {
+  if (!currentStudent) return;
+  const s = currentStudent;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-head">
+      <div><h3>Lodge a Complaint</h3><p>${s.index} &nbsp;·&nbsp; ${s.group}</p></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="score-preview">
+        <div class="score-preview-item"><span class="score-preview-label">CAT: </span><span>${s.cat}/5</span></div>
+        <div class="score-preview-item"><span class="score-preview-label">Quiz 1: </span><span>${s.quiz1}/20</span></div>
+        <div class="score-preview-item"><span class="score-preview-label">Quiz 2: </span><span>${s.quiz2}/30</span></div>
+        <div class="score-preview-item"><span class="score-preview-label">CA Score: </span><span>${s.final}/40</span></div>
+      </div>
+      <div class="form-group">
+        <label>Assessment in Question</label>
+        <select class="form-control" id="assessType">
+          <option value="">— Select assessment —</option>
+          <option>CAT (CA 1)</option><option>Quiz 1 (CA 2)</option><option>Quiz 2 (CA 3)</option>
+          <option>Total / Final Score</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Nature of Complaint</label>
+        <select class="form-control" id="complaintType">
+          <option value="">— Select type —</option>
+          <option>Score not recorded</option><option>Wrong score entered</option>
+          <option>Missing assessment</option><option>Calculation error</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Details</label>
+        <textarea class="form-control" id="complaintText" placeholder="Describe your complaint clearly. Include expected score if applicable…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-submit" onclick="submitComplaint()">Submit Complaint</button>
+    </div>`;
+  document.getElementById('complaintModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('complaintModal').classList.remove('open'); }
+document.getElementById('complaintModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+async function submitComplaint() {
+  const assess = document.getElementById('assessType').value;
+  const type = document.getElementById('complaintType').value;
+  const text = document.getElementById('complaintText').value.trim();
+  if (!assess || !type || !text) { alert('Please fill in all fields before submitting.'); return; }
+
+  const tid = 'TKT-' + Math.random().toString(36).substring(2,8).toUpperCase();
+  const now = new Date();
+  const date = now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const s = currentStudent;
+
+  // Show sending state
+  const submitBtn = document.querySelector('#modalContent .btn-submit');
+  if (submitBtn) { submitBtn.textContent = 'Sending…'; submitBtn.disabled = true; }
+
+  try {
+    const res = await fetch('https://formspree.io/f/mvzvrlgq', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        'Ticket ID': tid,
+        'Index Number': s.index,
+        'Programme': s.group,
+        'Assessment': assess,
+        'Complaint Type': type,
+        'Details': text,
+        'Date Submitted': date,
+        'Scores': `CAT: ${s.cat}/5 | Quiz 1: ${s.quiz1}/20 | Quiz 2: ${s.quiz2}/30 | CA Score: ${s.final}/40`
+      })
+    });
+
+    if (!res.ok) throw new Error('Network error');
+
+    complaints.push({ id: tid, index: s.index, assess, type, text, date });
+
+    document.getElementById('modalContent').innerHTML = `
+      <div class="success-screen">
+        <div class="success-icon">✓</div>
+        <h3>Complaint Submitted!</h3>
+        <p>Your complaint has been sent to the department and will be reviewed shortly.</p>
+        <div class="ticket-id">${tid}</div>
+        <p style="font-size:0.78rem;color:#94a3b8;margin-bottom:1.5rem">Save this reference number for follow-up.</p>
+        <button class="btn-submit" style="width:100%;" onclick="closeModal()">Done</button>
+      </div>`;
+    renderComplaints();
+
+  } catch (err) {
+    if (submitBtn) { submitBtn.textContent = 'Submit Complaint'; submitBtn.disabled = false; }
+    alert('Failed to send complaint. Please check your internet connection and try again.');
+  }
+}
+
+function renderComplaints() {
+  const section = document.getElementById('complaints-section');
+  if (!complaints.length) { section.style.display='none'; return; }
+  section.style.display = 'block';
+  document.getElementById('complaintCount').textContent = complaints.length;
+  document.getElementById('complaintsList').innerHTML = [...complaints].reverse().map(c => `
+    <div class="complaint-item">
+      <div class="complaint-top">
+        <div class="complaint-index">${c.index} &nbsp;·&nbsp; ${c.id}</div>
+        <div class="complaint-date">${c.date}</div>
+      </div>
+      <div class="complaint-type">${c.assess}</div>
+      <div class="complaint-text"><strong>${c.type}:</strong> ${esc(c.text)}</div>
+    </div>`).join('');
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+
+</body></html><!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA Score Portal — UCC</title>
+<link href="CA%20Score%20Portal%20%E2%80%94%20UCC_files/css2.css" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b3e;
+    --gold: #f5a623;
+    --gold-light: #ffd07b;
+    --cream: #fdf8f0;
+    --slate: #4a5568;
     --green: #22c55e;
     --red: #ef4444;
     --blue-soft: #e8f0fe;
